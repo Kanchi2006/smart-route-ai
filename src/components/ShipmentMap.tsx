@@ -61,7 +61,7 @@ function FitBounds({ shipment }: { shipment: ShipmentPoint | null }) {
 }
 
 export default function ShipmentMap({ shipment }: Props) {
-  const positions = useMemo<[number, number][]>(() => {
+  const straight = useMemo<[number, number][]>(() => {
     if (!shipment) return [];
     return [
       [shipment.source_lat, shipment.source_lng],
@@ -69,6 +69,29 @@ export default function ShipmentMap({ shipment }: Props) {
     ];
   }, [shipment]);
 
+  const [route, setRoute] = useState<[number, number][]>([]);
+
+  useEffect(() => {
+    if (!shipment) {
+      setRoute([]);
+      return;
+    }
+    let cancelled = false;
+    const url = `https://router.project-osrm.org/route/v1/driving/${shipment.source_lng},${shipment.source_lat};${shipment.dest_lng},${shipment.dest_lat}?overview=full&geometries=geojson`;
+    fetch(url, { signal: AbortSignal.timeout(8000) })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((json) => {
+        if (cancelled || !json?.routes?.[0]?.geometry?.coordinates) return;
+        const coords = json.routes[0].geometry.coordinates as [number, number][];
+        setRoute(coords.map(([lng, lat]) => [lat, lng] as [number, number]));
+      })
+      .catch((e) => console.warn("OSRM route fetch failed, using straight line", e));
+    return () => {
+      cancelled = true;
+    };
+  }, [shipment]);
+
+  const positions = route.length > 0 ? route : straight;
   const color = shipment ? RISK_COLORS[shipment.risk] ?? RISK_COLORS.Low : RISK_COLORS.Low;
 
   return (
