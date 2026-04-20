@@ -27,6 +27,13 @@ const redIcon = L.divIcon({
   iconAnchor: [13, 26],
 });
 
+const truckIcon = L.divIcon({
+  className: "",
+  html: `<div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:oklch(0.65 0.2 250);border-radius:50%;border:3px solid white;box-shadow:0 0 20px oklch(0.65 0.2 250),0 4px 12px rgba(0,0,0,0.4);font-size:18px;">🚚</div>`,
+  iconSize: [36, 36],
+  iconAnchor: [18, 18],
+});
+
 interface ShipmentPoint {
   source_lat: number;
   source_lng: number;
