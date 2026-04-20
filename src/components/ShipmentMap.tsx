@@ -60,7 +60,7 @@ function FitBounds({ shipment }: { shipment: ShipmentPoint | null }) {
   return null;
 }
 
-export function ShipmentMap({ shipment }: Props) {
+export default function ShipmentMap({ shipment }: Props) {
   const positions = useMemo<[number, number][]>(() => {
     if (!shipment) return [];
     return [
