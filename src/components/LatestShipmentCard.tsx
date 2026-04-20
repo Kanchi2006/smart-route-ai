@@ -15,6 +15,10 @@ export interface Shipment {
   id: string;
   source: string;
   destination: string;
+  source_lat: number;
+  source_lng: number;
+  dest_lat: number;
+  dest_lng: number;
   distance_km: number;
   weather: string;
   weather_temp: number | null;
