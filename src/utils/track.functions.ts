@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabase } from "@/integrations/supabase/client";
 import { findCity, distanceKm, type City } from "@/lib/india-cities";
 
 interface TrackInput {
