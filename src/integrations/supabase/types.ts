@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      shipments: {
+        Row: {
+          created_at: string
+          dest_lat: number
+          dest_lng: number
+          destination: string
+          distance_km: number
+          id: string
+          reason: string
+          risk: string
+          source: string
+          source_lat: number
+          source_lng: number
+          status: string
+          traffic: string
+          weather: string
+          weather_temp: number | null
+        }
+        Insert: {
+          created_at?: string
+          dest_lat: number
+          dest_lng: number
+          destination: string
+          distance_km?: number
+          id?: string
+          reason?: string
+          risk?: string
+          source: string
+          source_lat: number
+          source_lng: number
+          status?: string
+          traffic?: string
+          weather?: string
+          weather_temp?: number | null
+        }
+        Update: {
+          created_at?: string
+          dest_lat?: number
+          dest_lng?: number
+          destination?: string
+          distance_km?: number
+          id?: string
+          reason?: string
+          risk?: string
+          source?: string
+          source_lat?: number
+          source_lng?: number
+          status?: string
+          traffic?: string
+          weather?: string
+          weather_temp?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
