@@ -161,7 +161,7 @@ export const trackShipment = createServerFn({ method: "POST" })
       distanceKm: dist,
     });
 
-    const { data: inserted, error } = await supabaseAdmin
+    const { data: inserted, error } = await supabase
       .from("shipments")
       .insert({
         source: `${src.name}, ${src.state}`,
@@ -190,7 +190,7 @@ export const trackShipment = createServerFn({ method: "POST" })
   });
 
 export const listShipments = createServerFn({ method: "GET" }).handler(async () => {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await supabase
     .from("shipments")
     .select("*")
     .order("created_at", { ascending: false })
