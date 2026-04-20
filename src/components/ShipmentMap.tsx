@@ -101,6 +101,45 @@ export default function ShipmentMap({ shipment }: Props) {
   const positions = route.length > 0 ? route : straight;
   const color = shipment ? RISK_COLORS[shipment.risk] ?? RISK_COLORS.Low : RISK_COLORS.Low;
 
+  // Animated truck progress along polyline (0 -> 1, loops)
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    if (!shipment || positions.length < 2) return;
+    setProgress(0);
+    let raf: number;
+    let start: number | null = null;
+    const duration = 12000; // 12s full traversal
+    const tick = (t: number) => {
+      if (start === null) start = t;
+      const p = ((t - start) % duration) / duration;
+      setProgress(p);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [shipment, positions.length]);
+
+  const truckPos = useMemo<[number, number] | null>(() => {
+    if (positions.length < 2) return null;
+    // Compute cumulative segment distances
+    const dists: number[] = [0];
+    for (let i = 1; i < positions.length; i++) {
+      const [lat1, lng1] = positions[i - 1];
+      const [lat2, lng2] = positions[i];
+      dists.push(dists[i - 1] + Math.hypot(lat2 - lat1, lng2 - lng1));
+    }
+    const total = dists[dists.length - 1];
+    if (total === 0) return positions[0];
+    const target = progress * total;
+    let i = 1;
+    while (i < dists.length && dists[i] < target) i++;
+    if (i >= positions.length) return positions[positions.length - 1];
+    const segFrac = (target - dists[i - 1]) / (dists[i] - dists[i - 1] || 1);
+    const [lat1, lng1] = positions[i - 1];
+    const [lat2, lng2] = positions[i];
+    return [lat1 + (lat2 - lat1) * segFrac, lng1 + (lng2 - lng1) * segFrac];
+  }, [positions, progress]);
+
   return (
     <MapContainer
       center={[22.5, 80]}
@@ -117,6 +156,7 @@ export default function ShipmentMap({ shipment }: Props) {
           <Marker position={[shipment.source_lat, shipment.source_lng]} icon={greenIcon} />
           <Marker position={[shipment.dest_lat, shipment.dest_lng]} icon={redIcon} />
           <Polyline positions={positions} pathOptions={{ color, weight: 5, opacity: 0.9 }} />
+          {truckPos && <Marker position={truckPos} icon={truckIcon} />}
           <FitBounds shipment={shipment} />
         </>
       )}
