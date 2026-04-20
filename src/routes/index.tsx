@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Bell, Rocket } from "lucide-react";
 import { Sidebar } from "@/components/Sidebar";
-import { ShipmentMap } from "@/components/ShipmentMap";
+import { ShipmentMapLazy as ShipmentMap } from "@/components/ShipmentMapLazy";
 import { RiskDistribution, ShipmentsOverview } from "@/components/DashboardCharts";
 import { LatestShipmentCard, type Shipment } from "@/components/LatestShipmentCard";
 import { TrackingPanel } from "@/components/TrackingPanel";
