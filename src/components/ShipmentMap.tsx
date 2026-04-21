@@ -173,20 +173,3 @@ export default function ShipmentMap({ shipment }: Props) {
       </MapContainer>
     </div>
   );
-}
-      <TileLayer
-        attribution='&copy; OpenStreetMap'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {shipment && (
-        <>
-          <Marker position={[shipment.source_lat, shipment.source_lng]} icon={greenIcon} />
-          <Marker position={[shipment.dest_lat, shipment.dest_lng]} icon={redIcon} />
-          <Polyline positions={positions} pathOptions={{ color, weight: 5, opacity: 0.9 }} />
-          {truckPos && <Marker position={truckPos} icon={truckIcon} />}
-          <FitBounds shipment={shipment} />
-        </>
-      )}
-    </MapContainer>
-  );
-}
