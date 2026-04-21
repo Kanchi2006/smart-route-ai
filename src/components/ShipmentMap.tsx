@@ -140,9 +140,13 @@ export default function ShipmentMap({ shipment }: Props) {
     return [lat1 + (lat2 - lat1) * segFrac, lng1 + (lng2 - lng1) * segFrac];
   }, [positions, progress]);
 
+  // Generate a unique key per mount to avoid Leaflet's "Map container is already initialized"
+  // error caused by React StrictMode double-mounting in development.
+  const mapKeyRef = useRef(`map-${Math.random().toString(36).slice(2)}`);
+
   return (
     <MapContainer
-      key={shipment ? `${shipment.source_lat},${shipment.source_lng}-${shipment.dest_lat},${shipment.dest_lng}` : "default"}
+      key={mapKeyRef.current}
       center={[22.5, 80]}
       zoom={5}
       scrollWheelZoom={false}
