@@ -140,13 +140,19 @@ export default function ShipmentMap({ shipment }: Props) {
     return [lat1 + (lat2 - lat1) * segFrac, lng1 + (lng2 - lng1) * segFrac];
   }, [positions, progress]);
 
-  // Generate a unique key per mount to avoid Leaflet's "Map container is already initialized"
-  // error caused by React StrictMode double-mounting in development.
-  const mapKeyRef = useRef(`map-${Math.random().toString(36).slice(2)}`);
+  // Use a ref callback to scrub Leaflet's `_leaflet_id` from the container before
+  // react-leaflet attaches. This avoids the "Map container is already initialized"
+  // error that occurs when React (StrictMode/HMR/error boundary retry) reuses a DOM
+  // node that still carries Leaflet state from a prior mount.
+  const containerRef = (node: HTMLDivElement | null) => {
+    if (node && (node as any)._leaflet_id) {
+      delete (node as any)._leaflet_id;
+    }
+  };
 
   return (
     <MapContainer
-      key={mapKeyRef.current}
+      ref={containerRef as any}
       center={[22.5, 80]}
       zoom={5}
       scrollWheelZoom={false}
