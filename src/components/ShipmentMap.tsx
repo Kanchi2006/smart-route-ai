@@ -173,3 +173,5 @@ export default function ShipmentMap({ shipment }: Props) {
       </MapContainer>
     </div>
   );
+}
+
