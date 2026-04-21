@@ -140,26 +140,38 @@ export default function ShipmentMap({ shipment }: Props) {
     return [lat1 + (lat2 - lat1) * segFrac, lng1 + (lng2 - lng1) * segFrac];
   }, [positions, progress]);
 
+  // Scrub any leftover `_leaflet_id` from a prior mount so react-leaflet can
+  // re-initialize cleanly (avoids "Map container is already initialized").
+  const wrapperRef = (node: HTMLDivElement | null) => {
+    if (!node) return;
+    node.querySelectorAll<HTMLElement>(".leaflet-container").forEach((el) => {
+      if ((el as any)._leaflet_id) delete (el as any)._leaflet_id;
+    });
+  };
+
   return (
-    <MapContainer
-      center={[22.5, 80]}
-      zoom={5}
-      scrollWheelZoom={false}
-      className="w-full h-[420px] rounded-xl overflow-hidden"
-    >
-      <TileLayer
-        attribution='&copy; OpenStreetMap'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {shipment && (
-        <>
-          <Marker position={[shipment.source_lat, shipment.source_lng]} icon={greenIcon} />
-          <Marker position={[shipment.dest_lat, shipment.dest_lng]} icon={redIcon} />
-          <Polyline positions={positions} pathOptions={{ color, weight: 5, opacity: 0.9 }} />
-          {truckPos && <Marker position={truckPos} icon={truckIcon} />}
-          <FitBounds shipment={shipment} />
-        </>
-      )}
-    </MapContainer>
+    <div ref={wrapperRef}>
+      <MapContainer
+        center={[22.5, 80]}
+        zoom={5}
+        scrollWheelZoom={false}
+        className="w-full h-[420px] rounded-xl overflow-hidden"
+      >
+        <TileLayer
+          attribution='&copy; OpenStreetMap'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {shipment && (
+          <>
+            <Marker position={[shipment.source_lat, shipment.source_lng]} icon={greenIcon} />
+            <Marker position={[shipment.dest_lat, shipment.dest_lng]} icon={redIcon} />
+            <Polyline positions={positions} pathOptions={{ color, weight: 5, opacity: 0.9 }} />
+            {truckPos && <Marker position={truckPos} icon={truckIcon} />}
+            <FitBounds shipment={shipment} />
+          </>
+        )}
+      </MapContainer>
+    </div>
   );
 }
+
