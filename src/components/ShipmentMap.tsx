@@ -142,6 +142,7 @@ export default function ShipmentMap({ shipment }: Props) {
 
   return (
     <MapContainer
+      key={shipment ? `${shipment.source_lat},${shipment.source_lng}-${shipment.dest_lat},${shipment.dest_lng}` : "default"}
       center={[22.5, 80]}
       zoom={5}
       scrollWheelZoom={false}
