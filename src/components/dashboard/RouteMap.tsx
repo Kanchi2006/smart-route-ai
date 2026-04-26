@@ -12,23 +12,36 @@ L.Icon.Default.mergeOptions({ iconRetinaUrl, iconUrl, shadowUrl });
 /* ── Custom Markers ──────────────────────────────────────────── */
 const sourceIcon = L.divIcon({
   className: "",
-  html: `<div style="width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#10b981;border:3px solid white;box-shadow:0 0 18px #10b981aa;"></div>`,
-  iconSize: [28, 28],
-  iconAnchor: [14, 28],
+  html: `<div style="
+    width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+    background:linear-gradient(135deg,#10b981,#059669);border:3px solid white;
+    box-shadow:0 0 20px #10b981aa,0 4px 12px rgba(0,0,0,0.4);
+  "></div>`,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
 });
 
 const destIcon = L.divIcon({
   className: "",
-  html: `<div style="width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#ef4444;border:3px solid white;box-shadow:0 0 18px #ef4444aa;"></div>`,
-  iconSize: [28, 28],
-  iconAnchor: [14, 28],
+  html: `<div style="
+    width:32px;height:32px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+    background:linear-gradient(135deg,#ef4444,#dc2626);border:3px solid white;
+    box-shadow:0 0 20px #ef4444aa,0 4px 12px rgba(0,0,0,0.4);
+  "></div>`,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
 });
 
 const truckIcon = L.divIcon({
   className: "",
-  html: `<div style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#8b5cf6,#06b6d4);border-radius:50%;border:3px solid white;box-shadow:0 0 24px rgba(139,92,246,0.5),0 4px 16px rgba(0,0,0,0.4);font-size:18px;">🚚</div>`,
-  iconSize: [38, 38],
-  iconAnchor: [19, 19],
+  html: `<div style="
+    width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#8b5cf6,#06b6d4);border-radius:50%;
+    border:3px solid white;box-shadow:0 0 28px rgba(139,92,246,0.5),0 4px 16px rgba(0,0,0,0.4);
+    font-size:20px;
+  ">🚚</div>`,
+  iconSize: [42, 42],
+  iconAnchor: [21, 21],
 });
 
 /* ── Risk → polyline color ───────────────────────────────────── */
@@ -162,9 +175,12 @@ export function RouteMap({ shipment }: Props) {
           scrollWheelZoom={false}
           className="w-full h-[380px] lg:h-[420px] rounded-xl overflow-hidden"
         >
+          {/* CartoDB Positron — free, no API key, clean light Google Maps-like look */}
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org">OSM</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org">OSM</a> &copy; <a href="https://carto.com">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            subdomains="abcd"
+            maxZoom={20}
           />
           {shipment && (
             <>
